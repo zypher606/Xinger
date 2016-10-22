@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.learn2crack">
+    package="com.xinger">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name="com.xinger.MainActivity"
             android:theme="@style/AppTheme.LoginRegister"
             android:launchMode="singleTask">
             <intent-filter>
@@ -27,7 +27,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ProfileActivity"
+            android:name="com.xinger.ProfileActivity"
             android:theme="@style/AppTheme.Profile"/>
     </application>
 

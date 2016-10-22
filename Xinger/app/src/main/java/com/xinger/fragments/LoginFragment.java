@@ -1,8 +1,11 @@
-package com.learn2crack.fragments;
+package com.xinger.fragments;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -16,10 +19,11 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.learn2crack.R;
-import com.learn2crack.model.Response;
-import com.learn2crack.model.User;
-import com.learn2crack.network.NetworkUtil;
+import com.xinger.ProfileActivity;
+import com.xinger.R;
+import com.xinger.model.Response;
+import com.xinger.network.NetworkUtil;
+import com.xinger.utils.Constants;
 
 import java.io.IOException;
 
@@ -28,66 +32,66 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
-import static com.learn2crack.utils.Validation.validateEmail;
-import static com.learn2crack.utils.Validation.validateFields;
+import static com.xinger.utils.Validation.validateEmail;
+import static com.xinger.utils.Validation.validateFields;
 
-public class RegisterFragment extends Fragment {
+public class LoginFragment extends Fragment {
 
-    public static final String TAG = RegisterFragment.class.getSimpleName();
+    public static final String TAG = LoginFragment.class.getSimpleName();
 
-    private EditText mEtName;
     private EditText mEtEmail;
     private EditText mEtPassword;
-    private Button   mBtRegister;
-    private TextView mTvLogin;
-    private TextInputLayout mTiName;
+    private Button mBtLogin;
+    private TextView mTvRegister;
+    private TextView mTvForgotPassword;
     private TextInputLayout mTiEmail;
     private TextInputLayout mTiPassword;
-    private ProgressBar mProgressbar;
+    private ProgressBar mProgressBar;
 
     private CompositeSubscription mSubscriptions;
+    private SharedPreferences mSharedPreferences;
+
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.fragment_register,container,false);
+        View view = inflater.inflate(R.layout.fragment_login,container,false);
         mSubscriptions = new CompositeSubscription();
         initViews(view);
+        initSharedPreferences();
         return view;
     }
 
     private void initViews(View v) {
 
-        mEtName = (EditText) v.findViewById(R.id.et_name);
         mEtEmail = (EditText) v.findViewById(R.id.et_email);
         mEtPassword = (EditText) v.findViewById(R.id.et_password);
-        mBtRegister = (Button) v.findViewById(R.id.btn_register);
-        mTvLogin = (TextView) v.findViewById(R.id.tv_login);
-        mTiName = (TextInputLayout) v.findViewById(R.id.ti_name);
+        mBtLogin = (Button) v.findViewById(R.id.btn_login);
         mTiEmail = (TextInputLayout) v.findViewById(R.id.ti_email);
         mTiPassword = (TextInputLayout) v.findViewById(R.id.ti_password);
-        mProgressbar = (ProgressBar) v.findViewById(R.id.progress);
+        mProgressBar = (ProgressBar) v.findViewById(R.id.progress);
+        mTvRegister = (TextView) v.findViewById(R.id.tv_register);
+        mTvForgotPassword = (TextView) v.findViewById(R.id.tv_forgot_password);
 
-        mBtRegister.setOnClickListener(view -> register());
-        mTvLogin.setOnClickListener(view -> goToLogin());
+        mBtLogin.setOnClickListener(view -> login());
+        mTvRegister.setOnClickListener(view -> goToRegister());
+        mTvForgotPassword.setOnClickListener(view -> showDialog());
     }
 
-    private void register() {
+    private void initSharedPreferences() {
+
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+    }
+
+    private void login() {
 
         setError();
 
-        String name = mEtName.getText().toString();
         String email = mEtEmail.getText().toString();
         String password = mEtPassword.getText().toString();
 
         int err = 0;
-
-        if (!validateFields(name)) {
-
-            err++;
-            mTiName.setError("Name should not be empty !");
-        }
 
         if (!validateEmail(email)) {
 
@@ -103,13 +107,8 @@ public class RegisterFragment extends Fragment {
 
         if (err == 0) {
 
-            User user = new User();
-            user.setName(name);
-            user.setEmail(email);
-            user.setPassword(password);
-
-            mProgressbar.setVisibility(View.VISIBLE);
-            registerProcess(user);
+            loginProcess(email,password);
+            mProgressBar.setVisibility(View.VISIBLE);
 
         } else {
 
@@ -119,14 +118,13 @@ public class RegisterFragment extends Fragment {
 
     private void setError() {
 
-        mTiName.setError(null);
         mTiEmail.setError(null);
         mTiPassword.setError(null);
     }
 
-    private void registerProcess(User user) {
+    private void loginProcess(String email, String password) {
 
-        mSubscriptions.add(NetworkUtil.getRetrofit().register(user)
+        mSubscriptions.add(NetworkUtil.getRetrofit(email, password).login()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(this::handleResponse,this::handleError));
@@ -134,13 +132,24 @@ public class RegisterFragment extends Fragment {
 
     private void handleResponse(Response response) {
 
-        mProgressbar.setVisibility(View.GONE);
-        showSnackBarMessage(response.getMessage());
+        mProgressBar.setVisibility(View.GONE);
+
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString(Constants.TOKEN,response.getToken());
+        editor.putString(Constants.EMAIL,response.getMessage());
+        editor.apply();
+
+        mEtEmail.setText(null);
+        mEtPassword.setText(null);
+
+        Intent intent = new Intent(getActivity(), ProfileActivity.class);
+        startActivity(intent);
+
     }
 
     private void handleError(Throwable error) {
 
-        mProgressbar.setVisibility(View.GONE);
+        mProgressBar.setVisibility(View.GONE);
 
         if (error instanceof HttpException) {
 
@@ -169,12 +178,19 @@ public class RegisterFragment extends Fragment {
         }
     }
 
-    private void goToLogin(){
+    private void goToRegister(){
 
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        LoginFragment fragment = new LoginFragment();
-        ft.replace(R.id.fragmentFrame, fragment, LoginFragment.TAG);
+        RegisterFragment fragment = new RegisterFragment();
+        ft.replace(R.id.fragmentFrame,fragment,RegisterFragment.TAG);
         ft.commit();
+    }
+
+    private void showDialog(){
+
+        ResetPasswordDialog fragment = new ResetPasswordDialog();
+
+        fragment.show(getFragmentManager(), ResetPasswordDialog.TAG);
     }
 
     @Override

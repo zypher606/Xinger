@@ -1,4 +1,4 @@
-package com.learn2crack;
+package com.xinger;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -12,11 +12,11 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.learn2crack.fragments.ChangePasswordDialog;
-import com.learn2crack.model.Response;
-import com.learn2crack.model.User;
-import com.learn2crack.network.NetworkUtil;
-import com.learn2crack.utils.Constants;
+import com.xinger.fragments.ChangePasswordDialog;
+import com.xinger.model.Response;
+import com.xinger.model.User;
+import com.xinger.network.NetworkUtil;
+import com.xinger.utils.Constants;
 
 import java.io.IOException;
 

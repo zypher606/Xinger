@@ -1,4 +1,4 @@
-package com.learn2crack;
+package com.xinger;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

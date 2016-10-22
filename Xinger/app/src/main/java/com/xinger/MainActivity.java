@@ -1,4 +1,4 @@
-package com.learn2crack;
+package com.xinger;
 
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
@@ -6,8 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.learn2crack.fragments.LoginFragment;
-import com.learn2crack.fragments.ResetPasswordDialog;
+import com.xinger.fragments.LoginFragment;
+import com.xinger.fragments.ResetPasswordDialog;
 
 public class MainActivity extends AppCompatActivity implements ResetPasswordDialog.Listener {
 
