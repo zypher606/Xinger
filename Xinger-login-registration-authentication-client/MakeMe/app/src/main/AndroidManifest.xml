@@ -12,23 +12,35 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme.LoginRegister"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.LoginRegister">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
+
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="http"
-                    android:host="learn2crack" />
-
+                <data
+                    android:host="learn2crack"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
         <activity
             android:name=".ProfileActivity"
-            android:theme="@style/AppTheme.Profile"/>
+            android:theme="@style/AppTheme.Profile" />
+        <activity
+            android:name=".sidenav"
+            android:label="@string/title_activity_sidenav"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.learn2crack.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
