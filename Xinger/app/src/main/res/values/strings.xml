@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">Learn2Crack</string>
-    <string name="title_activity_dashboard">DashboardActivity</string>
+    <string name="app_name">Xinger</string>
+    <!--<string name="title_activity_dashboard">DashboardActivity</string>-->
+    <string name="title_activity_dashboard">Xinger</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

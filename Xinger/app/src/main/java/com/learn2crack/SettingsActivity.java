@@ -33,7 +33,6 @@ public class SettingsActivity extends AppCompatActivity implements ChangePasswor
     private TextView mTvEmail;
     private TextView mTvDate;
     private Button mBtChangePassword;
-    private Button mBtLogout;
 
     private ProgressBar mProgressbar;
 
@@ -46,7 +45,7 @@ public class SettingsActivity extends AppCompatActivity implements ChangePasswor
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_settings);
         mSubscriptions = new CompositeSubscription();
         initViews();
         initSharedPreferences();
@@ -59,11 +58,9 @@ public class SettingsActivity extends AppCompatActivity implements ChangePasswor
         mTvEmail = (TextView) findViewById(R.id.tv_email);
         mTvDate = (TextView) findViewById(R.id.tv_date);
         mBtChangePassword = (Button) findViewById(R.id.btn_change_password);
-        mBtLogout = (Button) findViewById(R.id.btn_logout);
         mProgressbar = (ProgressBar) findViewById(R.id.progress);
 
         mBtChangePassword.setOnClickListener(view -> showDialog());
-        mBtLogout.setOnClickListener(view -> logout());
     }
 
     private void initSharedPreferences() {
@@ -73,14 +70,6 @@ public class SettingsActivity extends AppCompatActivity implements ChangePasswor
         mEmail = mSharedPreferences.getString(Constants.EMAIL,"");
     }
 
-    private void logout() {
-
-        SharedPreferences.Editor editor = mSharedPreferences.edit();
-        editor.putString(Constants.EMAIL,"");
-        editor.putString(Constants.TOKEN,"");
-        editor.apply();
-        finish();
-    }
 
     private void showDialog(){
 

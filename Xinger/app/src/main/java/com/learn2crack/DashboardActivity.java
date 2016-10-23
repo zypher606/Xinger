@@ -1,5 +1,6 @@
 package com.learn2crack;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -153,7 +154,7 @@ public class DashboardActivity extends AppCompatActivity
         mSubscriptions.add(NetworkUtil.getRetrofit(mToken).getProfile(mEmail)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(this::handleResponse));
+                .subscribe(this::handleResponse, this::handleError));
     }
 
 
@@ -196,7 +197,7 @@ public class DashboardActivity extends AppCompatActivity
 
     private void showSnackBarMessage(String message) {
 
-        Snackbar.make(findViewById(R.id.activity_profile),message,Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(findViewById(R.id.activity_settings),message,Snackbar.LENGTH_SHORT).show();
 
     }
 
@@ -251,6 +252,9 @@ public class DashboardActivity extends AppCompatActivity
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_settings) {
+
+            Intent myIntent = new Intent(DashboardActivity.this, SettingsActivity.class);
+            DashboardActivity.this.startActivity(myIntent);
 
         } else if (id == R.id.nav_logout) {
             logout();
