@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.learn2crack.ProfileActivity;
+import com.learn2crack.SettingsActivity;
 import com.learn2crack.R;
 import com.learn2crack.model.Response;
 import com.learn2crack.model.User;
@@ -78,7 +78,7 @@ public class ChangePasswordDialog extends DialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mListener = (ProfileActivity)context;
+        mListener = (SettingsActivity)context;
     }
 
     private void initViews(View v) {

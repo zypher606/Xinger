@@ -12,23 +12,30 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme.LoginRegister"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:theme="@style/AppTheme.LoginRegister">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
+
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="http"
-                    android:host="learn2crack" />
-
+                <data
+                    android:host="learn2crack"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".ProfileActivity"
-            android:theme="@style/AppTheme.Profile"/>
+            android:name=".SettingsActivity"
+            android:theme="@style/AppTheme.Profile" />
+        <activity
+            android:name=".DashboardActivity"
+            android:label="@string/title_activity_dashboard"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
