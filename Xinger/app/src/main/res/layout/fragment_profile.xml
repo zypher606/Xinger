@@ -9,12 +9,14 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="122dp">
+        android:layout_height="@dimen/profile_cover_frame">
 
         <VideoView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/videoView"
-            android:layout_weight="1" />
+            android:layout_height="@dimen/profile_cover_frame"
+            android:id="@+id/cover_video"
+            android:layout_weight="1"
+            />
     </LinearLayout>
+
 </FrameLayout>
