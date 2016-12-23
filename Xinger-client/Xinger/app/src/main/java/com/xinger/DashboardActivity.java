@@ -1,4 +1,4 @@
-package com.learn2crack;
+package com.xinger;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,29 +17,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-import android.support.design.widget.NavigationView;
-
-
-
-
-
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.learn2crack.fragments.ChangePasswordDialog;
-import com.learn2crack.model.Response;
-import com.learn2crack.model.User;
-import com.learn2crack.network.NetworkUtil;
-import com.learn2crack.utils.Constants;
+import com.xinger.model.Response;
+import com.xinger.model.User;
+import com.xinger.network.NetworkUtil;
+import com.xinger.utils.Constants;
 
 import java.io.IOException;
 
@@ -113,6 +101,12 @@ public class DashboardActivity extends AppCompatActivity
         loadProfile();
 
 
+
+
+        // Temporary profile active
+        mFragmentManager = getSupportFragmentManager();
+        mFragmentTransaction = mFragmentManager.beginTransaction();
+        mFragmentTransaction.replace(R.id.tabLoad, new ProfileFragment()).commit();
 
 
 

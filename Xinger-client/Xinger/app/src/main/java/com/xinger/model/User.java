@@ -1,4 +1,4 @@
-package com.learn2crack.model;
+package com.xinger.model;
 
 
 public class User {

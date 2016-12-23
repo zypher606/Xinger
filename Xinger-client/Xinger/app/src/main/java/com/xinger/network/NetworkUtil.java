@@ -1,8 +1,8 @@
-package com.learn2crack.network;
+package com.xinger.network;
 
 import android.util.Base64;
 
-import com.learn2crack.utils.Constants;
+import com.xinger.utils.Constants;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

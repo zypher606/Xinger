@@ -1,7 +1,7 @@
-package com.learn2crack.network;
+package com.xinger.network;
 
-import com.learn2crack.model.Response;
-import com.learn2crack.model.User;
+import com.xinger.model.Response;
+import com.xinger.model.User;
 
 import retrofit2.http.Body;
 import retrofit2.http.GET;

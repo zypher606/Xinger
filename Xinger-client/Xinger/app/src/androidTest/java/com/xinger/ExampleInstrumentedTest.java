@@ -1,4 +1,4 @@
-package com.learn2crack;
+package com.xinger;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.learn2crack", appContext.getPackageName());
+        assertEquals("com.xinger", appContext.getPackageName());
     }
 }

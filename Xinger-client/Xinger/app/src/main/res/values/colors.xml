@@ -4,4 +4,12 @@
     <color name="colorPrimaryDark">#00695C</color>
     <color name="colorAccent">#ff4040</color>
     <color name="colorDarkGrey">#455A64</color>
+
+    <color name="btn_send_normal">#02c754</color>
+    <color name="btn_send_pressed">#006633</color>
+
+    <color name="buttonColor">#636363</color>
+    <color name="profile_background">#d1d1d1</color>
+
+    <color name="text_header">#ff9640</color>
 </resources>
