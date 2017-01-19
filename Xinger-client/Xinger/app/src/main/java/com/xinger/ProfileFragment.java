@@ -1,5 +1,6 @@
 package com.xinger;
 
+import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Point;
@@ -8,7 +9,9 @@ import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Display;
@@ -18,11 +21,23 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.xinger.model.Response;
+import com.xinger.model.User;
+import com.xinger.network.NetworkUtil;
+import com.xinger.utils.Constants;
 
 import java.io.IOException;
+
+import retrofit2.adapter.rxjava.HttpException;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,6 +65,13 @@ public class ProfileFragment extends Fragment implements TextureView.SurfaceText
 
 
 
+    //Fetching profile data
+    private TextView profileName;
+    private String mEmail;
+    private SharedPreferences mSharedPreferences;
+    private CompositeSubscription mSubscriptions;
+    private String mToken;
+
 
     @Nullable
     @Override
@@ -59,28 +81,13 @@ public class ProfileFragment extends Fragment implements TextureView.SurfaceText
 
 
 
-//        VideoView coverVideo = (VideoView) view.findViewById(R.id.surface_view);
-//
-//        ViewGroup.LayoutParams cover_layer_param = coverVideo.getLayoutParams();
-//
-//        Display display = getActivity().getWindowManager().getDefaultDisplay();
-//        Point size = new Point();
-//        display.getSize(size);
-//        cover_layer_param.width = size.x;
-//
-//
-//
-//
-//        String uriPath = "android.resource://com.xinger/" + R.raw.cover;
-//        Uri uri2 = Uri.parse(uriPath);
-//        coverVideo.setVideoURI(uri2);
-        
-        
-//        coverVideo.requestFocus();
-//        coverVideo.start();
 
+        mSubscriptions = new CompositeSubscription();
         calculateVideoSize();
         initView(view);
+
+        initSharedPreferences();
+        loadProfile();
 
         return view;
 
@@ -140,7 +147,67 @@ public class ProfileFragment extends Fragment implements TextureView.SurfaceText
         mTextureView.setLayoutParams(new FrameLayout.LayoutParams(coverFrameWidth, coverFrameHeight));
 
 
+
+
+
+        //Initiate profile details
+        profileName = (TextView) view.findViewById(R.id.profileUserName);
+
+
+
     }
+
+    private void initSharedPreferences() {
+
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
+        mToken = mSharedPreferences.getString(Constants.TOKEN,"");
+        mEmail = mSharedPreferences.getString(Constants.EMAIL,"");
+        Log.d("token", mToken);
+        Log.d("My email", mEmail);
+    }
+
+
+    private void loadProfile() {
+
+        mSubscriptions.add(NetworkUtil.getRetrofit(mToken).getProfile(mEmail)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::handleResponse,this::handleError));
+    }
+
+
+    private void handleResponse(User user) {
+        Log.d("Ftched username", user.getName());
+        profileName.setText(user.getName());
+    }
+
+    private void handleError(Throwable error) {
+
+
+        if (error instanceof HttpException) {
+
+            Gson gson = new GsonBuilder().create();
+
+            try {
+
+                String errorBody = ((HttpException) error).response().errorBody().string();
+                Response response = gson.fromJson(errorBody,Response.class);
+//                showSnackBarMessage(response.getMessage());
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+
+//            showSnackBarMessage("Network Error !");
+        }
+    }
+//
+//    private void showSnackBarMessage(String message) {
+//
+//        Snackbar.make(getActivity().findViewById(R.id.activity_profile),message,Snackbar.LENGTH_SHORT).show();
+//
+//    }
 
 
 
@@ -152,6 +219,8 @@ public class ProfileFragment extends Fragment implements TextureView.SurfaceText
             mMediaPlayer.release();
             mMediaPlayer = null;
         }
+
+        mSubscriptions.unsubscribe();
     }
 
 
@@ -162,8 +231,9 @@ public class ProfileFragment extends Fragment implements TextureView.SurfaceText
         try {
             AssetFileDescriptor afd = getActivity().getAssets().openFd(FILE_NAME);
             mMediaPlayer = new MediaPlayer();
-            mMediaPlayer
-                    .setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
+            mMediaPlayer.setDataSource("http://127.0.0.1:3000/");
+//            mMediaPlayer
+//                    .setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
             mMediaPlayer.setSurface(surface);
             mMediaPlayer.setLooping(true);
 

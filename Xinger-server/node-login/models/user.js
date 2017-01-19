@@ -15,7 +15,11 @@ const userSchema = mongoose.Schema({
 	
 });
 
-mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost:27017/node-login');
 
-module.exports = mongoose.model('user', userSchema);        
+
+mongoose.Promise = global.Promise;
+// mongoose.connect('mongodb://localhost:27017/node-login');
+const conn = mongoose.createConnection('mongodb://localhost:27017/node-login');
+
+module.exports = conn.model('user', userSchema);     
+

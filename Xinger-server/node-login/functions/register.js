@@ -1,6 +1,9 @@
 'use strict';
 
 const user = require('../models/user');
+
+const profile = require('../models/profile');
+
 const bcrypt = require('bcryptjs');
 
 exports.registerUser = (name, email, password) => 
@@ -16,11 +19,30 @@ exports.registerUser = (name, email, password) =>
 			email: email,
 			hashed_password: hash,
 			created_at: new Date()
+
 		});
+
+
+
+		const newProfile = new profile({
+
+			name: name,
+			email: email,
+			bio: 'my bio data is here',
+			profile_pic: 'default.jpg',
+			cover_video: 'default.mp4'
+
+		});
+		
+
+
 
 		newUser.save()
 
-		.then(() => resolve({ status: 201, message: 'User Registered Sucessfully !' }))
+		.then(() => {
+			resolve({ status: 201, message: 'User Registered Sucessfully !' });
+			newProfile.save();
+		})
 
 		.catch(err => {
 
@@ -33,6 +55,12 @@ exports.registerUser = (name, email, password) =>
 				reject({ status: 500, message: 'Internal Server Error !' });
 			}
 		});
+
+
+		
+
+
+
 	});
 
 
