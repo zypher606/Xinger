@@ -231,7 +231,7 @@ public class ProfileFragment extends Fragment implements TextureView.SurfaceText
         try {
             AssetFileDescriptor afd = getActivity().getAssets().openFd(FILE_NAME);
             mMediaPlayer = new MediaPlayer();
-            mMediaPlayer.setDataSource("http://127.0.0.1:3000/");
+            mMediaPlayer.setDataSource("https://tranquil-badlands-36898.herokuapp.com/");
 //            mMediaPlayer
 //                    .setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
             mMediaPlayer.setSurface(surface);
