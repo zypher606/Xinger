@@ -11,7 +11,7 @@ const config = require('./config/config.json');
 
 module.exports = router => {
 
-	router.get('/', (req, res) => res.end('Welcome to Learn2Crack !'));
+	router.get('/', (req, res) => res.end('Welcome to The app !'));
 
 	router.post('/authenticate', (req, res) => {
 
@@ -126,6 +126,26 @@ module.exports = router => {
 			.catch(err => res.status(err.status).json({ message: err.message }));
 		}
 	});
+
+
+
+	router.get('/media/video/:id', (req,res) => {
+
+		// if (checkToken(req)) {
+
+			profile.getProfile(req.params.id)
+
+			.then(result => res.json(result))
+
+			.catch(err => res.status(err.status).json({ message: err.message }));
+
+		// } else {
+
+			// res.status(401).json({ message: 'Invalid Token !' });
+		// }
+	});
+
+
 
 	function checkToken(req) {
 
