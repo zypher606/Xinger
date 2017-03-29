@@ -58,7 +58,8 @@
         <activity
             android:name="io.github.froger.xinger.ui.activity.UserProfileActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.TransparentActivity" />
+            android:theme="@style/AppTheme.TransparentActivity"
+            android:launchMode="singleInstance" />
         <activity
             android:name="io.github.froger.xinger.ui.activity.TakePhotoActivity"
             android:screenOrientation="portrait"
