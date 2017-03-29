@@ -1,21 +1,37 @@
 package io.github.froger.xinger.ui.activity;
 
+import android.content.SharedPreferences;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.BindDimen;
 import butterknife.BindString;
 import io.github.froger.xinger.R;
+import io.github.froger.xinger.model.Response;
+import io.github.froger.xinger.model.User;
+import io.github.froger.xinger.network.NetworkUtil;
 import io.github.froger.xinger.ui.utils.CircleTransformation;
+import io.github.froger.xinger.utils.Constants;
+import retrofit2.adapter.rxjava.HttpException;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Miroslaw Stanek on 15.07.15.
@@ -35,6 +51,19 @@ public class BaseDrawerActivity extends BaseActivity {
     //Cannot be bound via Butterknife, hosting view is initialized later (see setupHeader() method)
     private ImageView ivMenuUserProfilePhoto;
 
+
+
+    // Initiating navigation drawer values
+    private SharedPreferences mSharedPreferences;
+    private String mToken;
+    private String mEmail;
+
+    private CompositeSubscription mSubscriptions;
+
+    //private NavigationView navigationView;
+
+    private TextView drawerMenuProfileName;
+
     @Override
     public void setContentView(int layoutResID) {
         super.setContentViewWithoutInject(R.layout.activity_drawer);
@@ -42,6 +71,61 @@ public class BaseDrawerActivity extends BaseActivity {
         LayoutInflater.from(this).inflate(layoutResID, viewGroup, true);
         bindViews();
         setupHeader();
+
+
+        // Sidenav initiation
+        mSubscriptions = new CompositeSubscription();
+        initViews();
+        initSharedPreferences();
+        loadSidenavProfile();
+
+    }
+
+
+    private void initViews() {
+        View headerView = vNavigation.getHeaderView(0);
+        drawerMenuProfileName = (TextView) headerView.findViewById(R.id.drawerMenuProfileName);
+    }
+
+    private void initSharedPreferences() {
+
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mToken = mSharedPreferences.getString(Constants.TOKEN,"");
+        mEmail = mSharedPreferences.getString(Constants.EMAIL,"");
+    }
+
+    private void loadSidenavProfile() {
+
+        mSubscriptions.add(NetworkUtil.getRetrofit(mToken).getProfile(mEmail)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::handleResponse,this::handleError));
+    }
+
+    private void handleResponse(User user) {
+        Log.d("Fetched username", user.getName());
+        drawerMenuProfileName.setText(user.getName());
+    }
+
+    private void handleError(Throwable error) {
+
+        if (error instanceof HttpException) {
+
+            Gson gson = new GsonBuilder().create();
+
+            try {
+
+                String errorBody = ((HttpException) error).response().errorBody().string();
+                Response response = gson.fromJson(errorBody,Response.class);
+                //showSnackBarMessage(response.getMessage());
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+
+            //showSnackBarMessage("Network Error !");
+        }
     }
 
     @Override
@@ -88,6 +172,12 @@ public class BaseDrawerActivity extends BaseActivity {
                 overridePendingTransition(0, 0);
             }
         }, 200);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mSubscriptions.unsubscribe();
     }
 
 }

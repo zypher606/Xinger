@@ -3,25 +3,44 @@ package io.github.froger.xinger.ui.activity;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
+import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import io.github.froger.xinger.R;
 import io.github.froger.xinger.Utils;
+import io.github.froger.xinger.model.Response;
+import io.github.froger.xinger.model.User;
+import io.github.froger.xinger.network.NetworkUtil;
 import io.github.froger.xinger.ui.adapter.FeedAdapter;
 import io.github.froger.xinger.ui.adapter.FeedItemAnimator;
 import io.github.froger.xinger.ui.view.FeedContextMenu;
 import io.github.froger.xinger.ui.view.FeedContextMenuManager;
+import io.github.froger.xinger.utils.Constants;
+import retrofit2.adapter.rxjava.HttpException;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 
 public class DashboardActivity extends BaseDrawerActivity implements FeedAdapter.OnFeedItemClickListener,
@@ -42,6 +61,8 @@ public class DashboardActivity extends BaseDrawerActivity implements FeedAdapter
 
     private boolean pendingIntroAnimation;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +74,10 @@ public class DashboardActivity extends BaseDrawerActivity implements FeedAdapter
         } else {
             feedAdapter.updateItems(false);
         }
+
+
     }
+
 
     private void setupFeed() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this) {
