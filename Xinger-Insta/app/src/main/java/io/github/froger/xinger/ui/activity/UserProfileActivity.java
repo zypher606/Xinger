@@ -2,24 +2,40 @@ package io.github.froger.xinger.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
 
 import butterknife.BindView;
 import io.github.froger.xinger.R;
+import io.github.froger.xinger.model.Response;
+import io.github.froger.xinger.model.User;
+import io.github.froger.xinger.network.NetworkUtil;
 import io.github.froger.xinger.ui.adapter.UserProfileAdapter;
 import io.github.froger.xinger.ui.utils.CircleTransformation;
 import io.github.froger.xinger.ui.view.RevealBackgroundView;
+import io.github.froger.xinger.utils.Constants;
+import retrofit2.adapter.rxjava.HttpException;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Miroslaw Stanek on 14.01.15.
@@ -53,6 +69,17 @@ public class UserProfileActivity extends BaseDrawerActivity implements RevealBac
     private String profilePhoto;
     private UserProfileAdapter userPhotosAdapter;
 
+
+
+    // Initiating Profile Data
+    private SharedPreferences mSharedPreferences;
+    private String mToken;
+    private String mEmail;
+    private CompositeSubscription mSubscriptions;
+    private TextView current_user_fullname;
+
+
+
     public static void startUserProfileFromLocation(int[] startingLocation, Activity startingActivity) {
         Intent intent = new Intent(startingActivity, UserProfileActivity.class);
         intent.putExtra(ARG_REVEAL_START_LOCATION, startingLocation);
@@ -78,6 +105,60 @@ public class UserProfileActivity extends BaseDrawerActivity implements RevealBac
         setupTabs();
         setupUserProfileGrid();
         setupRevealBackground(savedInstanceState);
+
+
+
+
+        // Profile data initiation
+        mSubscriptions = new CompositeSubscription();
+        initViews();
+        initSharedPreferences();
+        loadSidenavProfile();
+    }
+
+    private void initViews() {
+        current_user_fullname = (TextView) findViewById(R.id.current_user_fullname);
+    }
+
+    private void initSharedPreferences() {
+
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mToken = mSharedPreferences.getString(Constants.TOKEN,"");
+        mEmail = mSharedPreferences.getString(Constants.EMAIL,"");
+    }
+
+    private void loadSidenavProfile() {
+
+        mSubscriptions.add(NetworkUtil.getRetrofit(mToken).getProfile(mEmail)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::handleResponse,this::handleError));
+    }
+
+    private void handleResponse(User user) {
+        Log.d("Fetched username", user.getName());
+        current_user_fullname.setText(user.getName());
+    }
+
+    private void handleError(Throwable error) {
+
+        if (error instanceof HttpException) {
+
+            Gson gson = new GsonBuilder().create();
+
+            try {
+
+                String errorBody = ((HttpException) error).response().errorBody().string();
+                Response response = gson.fromJson(errorBody,Response.class);
+                //showSnackBarMessage(response.getMessage());
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+
+            //showSnackBarMessage("Network Error !");
+        }
     }
 
     private void setupTabs() {
@@ -149,4 +230,11 @@ public class UserProfileActivity extends BaseDrawerActivity implements RevealBac
            vUserDetails.animate().translationY(0).setDuration(300).setStartDelay(200).setInterpolator(INTERPOLATOR);
            vUserStats.animate().alpha(1).setDuration(200).setStartDelay(400).setInterpolator(INTERPOLATOR).start();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mSubscriptions.unsubscribe();
+    }
+
 }
