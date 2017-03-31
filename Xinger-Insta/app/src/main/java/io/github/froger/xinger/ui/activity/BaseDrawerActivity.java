@@ -60,7 +60,6 @@ public class BaseDrawerActivity extends BaseActivity {
 
     private CompositeSubscription mSubscriptions;
 
-    //private NavigationView navigationView;
 
     private TextView drawerMenuProfileName;
 

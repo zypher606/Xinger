@@ -16,6 +16,7 @@
         android:name="android.hardware.camera.autofocus"
         android:required="false" />
 
+    <!--singleTask => flag of launchMode -->
     <application
         android:name="io.github.froger.xinger.InstaMaterialApplication"
         android:icon="@drawable/ic_launcher"
@@ -24,7 +25,7 @@
 
         <activity
             android:name="io.github.froger.xinger.ui.activity.MainActivity"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme.LoginRegister"
             android:screenOrientation="portrait">
 
