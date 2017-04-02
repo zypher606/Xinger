@@ -3,7 +3,7 @@
 <resources>
     <color name="style_color_primary">#00897B</color>
     <color name="style_color_primary_dark">#00695C</color>
-    <color name="style_color_accent">#01bcd5</color>
+    <color name="style_color_accent">#00a691</color>
 
     <color name="fab_color_pressed">#007787</color>
     <color name="fab_color_shadow">#44000000</color>

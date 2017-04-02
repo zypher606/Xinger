@@ -7,7 +7,7 @@
         <item
             android:id="@+id/menu_direct"
             android:icon="@drawable/ic_global_menu_direct"
-            android:title="Instagram Direct" />
+            android:title="Xinger Direct" />
         <item
             android:id="@+id/menu_news"
             android:icon="@drawable/ic_global_menu_news"
