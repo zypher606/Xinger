@@ -1,19 +1,24 @@
 package io.github.froger.xinger.ui.activity;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -86,6 +91,13 @@ public class TakePhotoActivity extends BaseActivity implements RevealBackgroundV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_take_photo);
+
+        if (ContextCompat.checkSelfPermission(TakePhotoActivity.this.getApplicationContext(), Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(TakePhotoActivity.this,
+                    new String[]{Manifest.permission.CAMERA},
+                    0);
+        }
         updateStatusBarColor();
         updateState(STATE_TAKE_PHOTO);
         setupRevealBackground(savedInstanceState);
@@ -242,6 +254,14 @@ public class TakePhotoActivity extends BaseActivity implements RevealBackgroundV
 
         @Override
         public void saveImage(PictureTransaction xact, byte[] image) {
+
+            if (ContextCompat.checkSelfPermission(TakePhotoActivity.this.getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(TakePhotoActivity.this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        0);
+            }
+
             super.saveImage(xact, image);
             photoPath = getPhotoPath();
         }

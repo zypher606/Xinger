@@ -1,13 +1,16 @@
 package io.github.froger.xinger.ui.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -63,6 +66,8 @@ public class BaseDrawerActivity extends BaseActivity {
 
     private TextView drawerMenuProfileName;
 
+    SessionManager manager;
+
     @Override
     public void setContentView(int layoutResID) {
         super.setContentViewWithoutInject(R.layout.activity_drawer);
@@ -77,6 +82,11 @@ public class BaseDrawerActivity extends BaseActivity {
         initViews();
         initSharedPreferences();
         loadSidenavProfile();
+
+
+        /*****************************/
+        manager = new SessionManager();
+        /*****************************/
 
     }
 
@@ -150,6 +160,64 @@ public class BaseDrawerActivity extends BaseActivity {
             }
         });
 
+
+        vNavigation.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                int id = menuItem.getItemId();
+                switch (id) {
+                    case R.id.menu_feed:
+
+                        Intent i = new Intent(BaseDrawerActivity.this, DashboardActivity.class);
+                        startActivity(i);
+                        Log.d("Clicked: ", "Menu feed");
+                        break;
+                    case R.id.menu_direct:
+                        //Do some thing here
+                        // add navigation drawer item onclick method here
+                        break;
+                    case R.id.menu_news:
+                        //Do some thing here
+                        // add navigation drawer item onclick method here
+                        break;
+                    case R.id.menu_popular:
+                        //Do some thing here
+                        // add navigation drawer item onclick method here
+                        break;
+                    case R.id.menu_photos_nearby:
+                        //Do some thing here
+                        // add navigation drawer item onclick method here
+                        break;
+
+                    case R.id.menu_photo_you_liked:
+                        //Do some thing here
+                        // add navigation drawer item onclick method here
+                        break;
+
+                    case R.id.menu_settings:
+                        //Do some thing here
+                        // add navigation drawer item onclick method here
+                        break;
+
+                    case R.id.menu_logout:
+                        manager.setPreferences(BaseDrawerActivity.this, "status", "0");
+                        Intent intent = new Intent(BaseDrawerActivity.this, UserAuthenticationActivity.class);
+                        startActivity(intent);
+//                        finish();
+
+                        break;
+                }
+
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return false;
+            }
+
+        });
+
+
+
+
+
         Picasso.with(this)
                 .load(profilePhoto)
                 .placeholder(R.drawable.img_circle_placeholder)
@@ -173,6 +241,56 @@ public class BaseDrawerActivity extends BaseActivity {
         }, 200);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+
+/*
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+        View v = getWindow().getCurrentFocus();
+
+
+        if (id == R.id.menu_feed) {
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    int[] startingLocation = new int[2];
+//                    v.getLocationOnScreen(startingLocation);
+//                    startingLocation[0] += v.getWidth() / 2;
+//                    DashboardActivity.startDashboardFromLocation(startingLocation, BaseDrawerActivity.this);
+//                    overridePendingTransition(0, 0);
+//                }
+//            }, 200);
+            Log.d("Clicked:", "Menu feed");
+        } else if (id == R.id.menu_direct) {
+
+        } else if (id == R.id.menu_news) {
+
+        } else if (id == R.id.menu_popular) {
+
+        } else if (id == R.id.menu_photos_nearby) {
+
+        } else if (id == R.id.menu_photo_you_liked) {
+
+        } else if (id == R.id.menu_settings) {
+
+        } else if (id == R.id.menu_about) {
+
+        }
+
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
+*/
     @Override
     protected void onDestroy() {
         super.onDestroy();
