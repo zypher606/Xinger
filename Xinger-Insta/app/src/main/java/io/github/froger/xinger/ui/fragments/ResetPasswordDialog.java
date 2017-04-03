@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import io.github.froger.xinger.ui.activity.MainActivity;
+import io.github.froger.xinger.ui.activity.UserAuthenticationActivity;
 import io.github.froger.xinger.R;
 import io.github.froger.xinger.model.Response;
 import io.github.froger.xinger.model.User;
@@ -89,7 +89,7 @@ public class ResetPasswordDialog extends DialogFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mListner = (MainActivity)context;
+        mListner = (UserAuthenticationActivity)context;
     }
 
     private void setEmptyFields() {

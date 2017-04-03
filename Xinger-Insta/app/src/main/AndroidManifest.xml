@@ -24,17 +24,11 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="io.github.froger.xinger.ui.activity.MainActivity"
+            android:name="io.github.froger.xinger.ui.activity.UserAuthenticationActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.LoginRegister"
             android:screenOrientation="portrait">
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-
-            </intent-filter>
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -70,6 +64,17 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateHidden">
+
+        </activity>
+
+        <activity android:name="io.github.froger.xinger.ui.activity.Splash"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
 
         </activity>
     </application>

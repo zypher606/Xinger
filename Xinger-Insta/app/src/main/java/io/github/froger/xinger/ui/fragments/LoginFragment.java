@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import io.github.froger.xinger.ui.activity.DashboardActivity;
 import io.github.froger.xinger.R;
 import io.github.froger.xinger.model.Response;
 import io.github.froger.xinger.network.NetworkUtil;
+import io.github.froger.xinger.ui.activity.SessionManager;
 import io.github.froger.xinger.utils.Constants;
 
 import java.io.IOException;
@@ -51,6 +53,7 @@ public class LoginFragment extends Fragment {
     private CompositeSubscription mSubscriptions;
     private SharedPreferences mSharedPreferences;
 
+    SessionManager manager;
 
 
     @Nullable
@@ -58,6 +61,9 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login,container,false);
         mSubscriptions = new CompositeSubscription();
+
+        manager = new SessionManager();
+
         initViews(view);
         initSharedPreferences();
         return view;
@@ -123,6 +129,7 @@ public class LoginFragment extends Fragment {
     }
 
     private void loginProcess(String email, String password) {
+        Log.d("status: ", "Entered login process");
 
         mSubscriptions.add(NetworkUtil.getRetrofit(email, password).login()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -132,6 +139,7 @@ public class LoginFragment extends Fragment {
 
     private void handleResponse(Response response) {
 
+        Log.d("status", "Entered handle response");
         mProgressBar.setVisibility(View.GONE);
 
         SharedPreferences.Editor editor = mSharedPreferences.edit();
@@ -141,6 +149,17 @@ public class LoginFragment extends Fragment {
 
         mEtEmail.setText(null);
         mEtPassword.setText(null);
+
+        Log.d("status", "Fields cleared");
+        /*****************************************************************/
+        manager.setPreferences(getActivity(), "TOKEN", response.getToken());
+        manager.setPreferences(getActivity(), "EMAIL", response.getMessage());
+        manager.setPreferences(getActivity(), "status", "1");
+        String status=manager.getPreferences(getActivity(),"status");
+        Log.d("status", status);
+        Log.d("status", "Done creating session");
+        /*****************************************************************/
+
 
 //        Intent intent = new Intent(getActivity(), SettingsActivity.class);
         Intent intent = new Intent(getActivity(), DashboardActivity.class);
@@ -192,6 +211,16 @@ public class LoginFragment extends Fragment {
         ResetPasswordDialog fragment = new ResetPasswordDialog();
 
         fragment.show(getFragmentManager(), ResetPasswordDialog.TAG);
+    }
+
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        SharedPreferences myPrefs = mSharedPreferences;
+        String username = myPrefs.getString(Constants.EMAIL,null);
+        String token = myPrefs.getString(Constants.TOKEN,null);
+        Log.d("Fetched username", username);
     }
 
     @Override

@@ -10,7 +10,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +66,8 @@ public class BaseDrawerActivity extends BaseActivity {
 
     private TextView drawerMenuProfileName;
 
+    SessionManager manager;
+
     @Override
     public void setContentView(int layoutResID) {
         super.setContentViewWithoutInject(R.layout.activity_drawer);
@@ -81,6 +82,11 @@ public class BaseDrawerActivity extends BaseActivity {
         initViews();
         initSharedPreferences();
         loadSidenavProfile();
+
+
+        /*****************************/
+        manager = new SessionManager();
+        /*****************************/
 
     }
 
@@ -193,9 +199,12 @@ public class BaseDrawerActivity extends BaseActivity {
                         // add navigation drawer item onclick method here
                         break;
 
-                    case R.id.menu_about:
-                        //Do some thing here
-                        // add navigation drawer item onclick method here
+                    case R.id.menu_logout:
+                        manager.setPreferences(BaseDrawerActivity.this, "status", "0");
+                        Intent intent = new Intent(BaseDrawerActivity.this, UserAuthenticationActivity.class);
+                        startActivity(intent);
+//                        finish();
+
                         break;
                 }
 

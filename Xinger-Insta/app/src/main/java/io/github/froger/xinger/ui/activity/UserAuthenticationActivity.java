@@ -10,17 +10,19 @@ import io.github.froger.xinger.R;
 import io.github.froger.xinger.ui.fragments.LoginFragment;
 import io.github.froger.xinger.ui.fragments.ResetPasswordDialog;
 
-public class MainActivity extends AppCompatActivity implements ResetPasswordDialog.Listener {
+public class UserAuthenticationActivity extends AppCompatActivity implements ResetPasswordDialog.Listener {
 
-    public static final String TAG = MainActivity.class.getSimpleName();
+    public static final String TAG = UserAuthenticationActivity.class.getSimpleName();
 
     private LoginFragment mLoginFragment;
     private ResetPasswordDialog mResetPasswordDialog;
 
+    SessionManager manager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_user_authentication);
 
         if (savedInstanceState == null) {
 
@@ -60,6 +62,30 @@ public class MainActivity extends AppCompatActivity implements ResetPasswordDial
 
         Snackbar.make(findViewById(R.id.activity_main),message, Snackbar.LENGTH_SHORT).show();
 
+    }
+
+    @Override
+    public  void onResume(){
+        super.onResume();
+        manager=new SessionManager();
+        String status=manager.getPreferences(UserAuthenticationActivity.this,"status");
+        Log.d("status",status);
+        if (status.equals("1")){
+            Intent i=new Intent(UserAuthenticationActivity.this,DashboardActivity.class);
+            startActivity(i);
+            return;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);//***Change Here***
+        startActivity(intent);
+        finish();
+        System.exit(0);
     }
 
 
