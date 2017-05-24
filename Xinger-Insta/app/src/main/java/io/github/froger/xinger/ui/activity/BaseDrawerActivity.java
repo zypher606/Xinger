@@ -165,11 +165,12 @@ public class BaseDrawerActivity extends BaseActivity {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
                 int id = menuItem.getItemId();
+                Intent intent;
                 switch (id) {
                     case R.id.menu_feed:
 
-                        Intent i = new Intent(BaseDrawerActivity.this, DashboardActivity.class);
-                        startActivity(i);
+                        intent = new Intent(BaseDrawerActivity.this, DashboardActivity.class);
+                        startActivity(intent);
                         Log.d("Clicked: ", "Menu feed");
                         break;
                     case R.id.menu_direct:
@@ -195,16 +196,14 @@ public class BaseDrawerActivity extends BaseActivity {
                         break;
 
                     case R.id.menu_settings:
-                        //Do some thing here
-                        // add navigation drawer item onclick method here
+                        intent = new Intent(BaseDrawerActivity.this, SettingsActivity.class);
+                        startActivity(intent);
                         break;
 
                     case R.id.menu_logout:
                         manager.setPreferences(BaseDrawerActivity.this, "status", "0");
-                        Intent intent = new Intent(BaseDrawerActivity.this, UserAuthenticationActivity.class);
+                        intent = new Intent(BaseDrawerActivity.this, UserAuthenticationActivity.class);
                         startActivity(intent);
-//                        finish();
-
                         break;
                 }
 

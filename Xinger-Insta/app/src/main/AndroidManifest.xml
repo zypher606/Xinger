@@ -11,10 +11,10 @@
         android:required="true" />
     <uses-feature
         android:name="android.hardware.camera.front"
-        android:required="false" />
+        android:required="true" />
     <uses-feature
         android:name="android.hardware.camera.autofocus"
-        android:required="false" />
+        android:required="true" />
 
     <!--singleTask => flag of launchMode -->
     <application
@@ -77,6 +77,11 @@
 
 
         </activity>
+
+        <activity
+            android:name="io.github.froger.xinger.ui.activity.SettingsActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleInstance" />
     </application>
 
 </manifest>

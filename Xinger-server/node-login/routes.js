@@ -7,7 +7,30 @@ const register = require('./functions/register');
 const login = require('./functions/login');
 const profile = require('./functions/profile');
 const password = require('./functions/password');
+const upload = require('./functions/upload');
 const config = require('./config/config.json');
+
+
+
+
+
+const multer = require('multer');
+const path = require('path');
+const crypto = require('crypto');
+
+const storage = multer.diskStorage({
+				    destination: './uploads/images',
+				    filename: function(req, file, cb) {
+				      return crypto.pseudoRandomBytes(16, function(err, raw) {
+				        if (err) {
+				          return cb(err);
+				        }
+				        return cb(null, "" + (raw.toString('hex')) + (path.extname(file.originalname)));
+				      });
+				    }
+				});
+
+
 
 module.exports = router => {
 
@@ -125,6 +148,16 @@ module.exports = router => {
 
 			.catch(err => res.status(err.status).json({ message: err.message }));
 		}
+	});
+
+
+
+
+	router.post('/uploadImage/:id', multer({storage: storage}).single('upload'), (req,res) => {
+
+		const email = req.params.id;
+		upload.imageUpload(req, res, email);
+
 	});
 
 

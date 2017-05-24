@@ -65,7 +65,7 @@ public class UserAuthenticationActivity extends AppCompatActivity implements Res
     }
 
     @Override
-    public  void onResume(){
+    public void onResume(){
         super.onResume();
         manager=new SessionManager();
         String status=manager.getPreferences(UserAuthenticationActivity.this,"status");
@@ -73,7 +73,6 @@ public class UserAuthenticationActivity extends AppCompatActivity implements Res
         if (status.equals("1")){
             Intent i=new Intent(UserAuthenticationActivity.this,DashboardActivity.class);
             startActivity(i);
-            return;
         }
     }
 

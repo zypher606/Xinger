@@ -67,4 +67,9 @@ public class BaseActivity extends AppCompatActivity {
     public ImageView getIvLogo() {
         return ivLogo;
     }
+
+
+
+
+
 }

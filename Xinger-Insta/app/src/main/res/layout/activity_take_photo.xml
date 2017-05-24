@@ -113,11 +113,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.commonsware.cwac.camera.CameraView
+            <TextureView
                 android:id="@+id/cameraView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center_vertical" />
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true" />
 
             <ImageButton
                 android:id="@+id/ivTakenPhoto"
