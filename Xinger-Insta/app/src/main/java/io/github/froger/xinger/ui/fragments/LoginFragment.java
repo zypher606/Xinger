@@ -59,7 +59,7 @@ public class LoginFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_login,container,false);
+        View view = inflater.inflate(R.layout.fragment_login, container,false);
         mSubscriptions = new CompositeSubscription();
 
         manager = new SessionManager();
@@ -220,7 +220,10 @@ public class LoginFragment extends Fragment {
         SharedPreferences myPrefs = mSharedPreferences;
         String username = myPrefs.getString(Constants.EMAIL,null);
         String token = myPrefs.getString(Constants.TOKEN,null);
-        Log.d("Fetched username", username);
+        if(username != null) {
+            Log.d("Fetched username", username);
+        }
+
     }
 
     @Override

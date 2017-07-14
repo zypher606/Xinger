@@ -14,21 +14,21 @@ const config = require('./config/config.json');
 
 
 
-const multer = require('multer');
+// const multer = require('multer');
 const path = require('path');
 const crypto = require('crypto');
 
-const storage = multer.diskStorage({
-				    destination: './uploads/images',
-				    filename: function(req, file, cb) {
-				      return crypto.pseudoRandomBytes(16, function(err, raw) {
-				        if (err) {
-				          return cb(err);
-				        }
-				        return cb(null, "" + (raw.toString('hex')) + (path.extname(file.originalname)));
-				      });
-				    }
-				});
+// const storage = multer.diskStorage({
+// 				    destination: './uploads/images',
+// 				    filename: function(req, file, cb) {
+// 				      return crypto.pseudoRandomBytes(16, function(err, raw) {
+// 				        if (err) {
+// 				          return cb(err);
+// 				        }
+// 				        return cb(null, "" + (raw.toString('hex')) + (path.extname(file.originalname)));
+// 				      });
+// 				    }
+// 				});
 
 
 
@@ -153,12 +153,12 @@ module.exports = router => {
 
 
 
-	router.post('/uploadImage/:id', multer({storage: storage}).single('upload'), (req,res) => {
+	// router.post('/uploadImage/:id', multer({storage: storage}).single('upload'), (req,res) => {
 
-		const email = req.params.id;
-		upload.imageUpload(req, res, email);
+	// 	const email = req.params.id;
+	// 	upload.imageUpload(req, res, email);
 
-	});
+	// });
 
 
 

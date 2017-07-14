@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath 'com.android.tools.build:gradle:2.3.2'
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
     }
 }
@@ -14,5 +14,7 @@ allprojects {
         maven {
             url "https://s3.amazonaws.com/repo.commonsware.com"
         }
+        maven { url "https://dl.bintray.com/drummer-aidan/maven" }
+
     }
 }

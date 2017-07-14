@@ -82,6 +82,16 @@
             android:name="io.github.froger.xinger.ui.activity.SettingsActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleInstance" />
+
+
+         <!--Register library Activities -->
+        <activity
+            android:name="com.afollestad.materialcamera.CaptureActivity"
+            android:theme="@style/MaterialCamera.CaptureActivity" />
+        <activity
+            android:name="com.afollestad.materialcamera.CaptureActivity2"
+            android:theme="@style/MaterialCamera.CaptureActivity" />
+        <!--<activity android:name=".FragmentActivity"></activity>-->
     </application>
 
 </manifest>
